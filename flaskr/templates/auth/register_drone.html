@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Register Drone{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="drone_name">Drone Name:</label>
+    <input name="drone_name" id="drone_name" required>
+    <label for="description">Description:</label>
+    <input type="description" name="description" id="description" required>
+      <label for="ip_addr">IP Address:</label>
+    <input type="ip_addr" name="ip_addr" id="ip_addr" required>
+      <label for="port">Port:</label>
+    <input type="port" name="port" id="port" required>
+    <input type="submit" value="Register Drone">
+  </form>
+{% endblock %}
