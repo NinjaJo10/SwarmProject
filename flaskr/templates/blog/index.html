@@ -17,7 +17,6 @@
         </div>
         {% if g.user['id'] == drone['owner_id'] %}
           <a class="action" href="{{ url_for('blog.update', id=drone['id']) }}">Edit</a>
-            <p>This is yours mate {{ drone['owner_id'] }}</p>
         {% endif %}
       </header>
         <p class="description">Description: {{ drone['description'] }}, IP Address: {{ drone['ip_addr'] }}, Port: {{ drone['port'] }}, MAC Address: {{ drone['mac_addr'] }}</p>

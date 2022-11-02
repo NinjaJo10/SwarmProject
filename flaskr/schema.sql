@@ -11,7 +11,7 @@ CREATE TABLE user (
 
 CREATE TABLE groups (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  group_name TEXT UNIQUE NOT NULL
+  group_name TEXT NOT NULL
 );
 
 CREATE TABLE post (

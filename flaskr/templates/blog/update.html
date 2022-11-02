@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Edit "{{ post['title'] }}"{% endblock %}</h1>
+  <h1>{% block title %}Edit "{{ drone['drone_name'] }}"{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title"
-      value="{{ request.form['title'] or post['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
-    <input type="submit" value="Save">
+    <label for="drone_name">Drone Name</label>
+    <input name="drone_name" id="drone_name"
+      value="{{ request.form['drone_name'] or drone['drone_name'] }}" required>
+    <label for="description">Description:</label>
+    <input type="description" name="description" id="description"
+           value="{{ request.form['description'] or drone['description'] }}" required>
+      <label for="ip_addr">IP Address:</label>
+    <input type="ip_addr" name="ip_addr" id="ip_addr"
+           value="{{ request.form['ip_addr'] or drone['ip_addr'] }}" required>
+      <label for="port">Port:</label>
+    <input type="port" name="port" id="port"
+           value="{{ request.form['port'] or drone['port'] }}" required>
+      <label for="mac_addr">Mac Address:</label>
+    <input type="mac_addr" name="mac_addr" id="mac_addr"
+           value="{{ request.form['port'] or drone['mac_addr'] }}" required>
+    <input type="submit" value="Save Drone Info">
   </form>
   <hr>
-  <form action="{{ url_for('blog.delete', id=post['id']) }}" method="post">
+  <form action="{{ url_for('blog.delete', id=drone['id']) }}" method="post">
     <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
   </form>
 {% endblock %}

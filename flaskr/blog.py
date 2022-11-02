@@ -13,7 +13,7 @@ bp = Blueprint('blog', __name__)
 def index():
     db = get_db()
     drones = db.execute(
-        'SELECT p.id, drone_name, description, ip_addr, port, u.username'
+        'SELECT p.id, drone_name, description, ip_addr, port, u.username, owner_id'
         ' FROM drones p JOIN user u ON p.owner_id = u.id'
         ' ORDER BY p.id DESC'
     ).fetchall()
@@ -61,55 +61,66 @@ def create():
     return render_template('blog/create.html')
 
 
-def get_post(id, check_author=True):
-    post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
+def get_drone(id, check_author=True):
+    drone = get_db().execute(
+        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
+        ' FROM drones p JOIN user u ON p.owner_id = u.id'
         ' WHERE p.id = ?',
         (id,)
     ).fetchone()
 
-    if post is None:
-        abort(404, f"Post id {id} doesn't exist.")
+    if drone is None:
+        abort(404, f"Drone id {id} doesn't exist.")
 
-    if check_author and post['author_id'] != g.user['id']:
+    if check_author and drone['owner_id'] != g.user['id']:
         abort(403)
 
-    return post
+    return drone
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    post = get_post(id)
+    drone = get_drone(id)
 
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+        drone_name = request.form['drone_name']
+        description = request.form['description']
+        ip_addr = request.form['ip_addr']
+        port = request.form['port']
+        mac_addr = request.form['mac_addr']
         error = None
 
-        if not title:
-            error = 'Title is required.'
+        if not drone_name:
+            error = 'Drone Name is required.'
+        elif not description:
+            error = 'Description is required.'
+        elif not ip_addr:
+            error = 'IP Address is required.'
+        elif not port:
+            error = 'Port is required.'
+        elif not mac_addr:
+            error = 'Mac Address is required.'
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?'
+                'UPDATE drones SET drone_name = ?, description = ?, ip_addr = ?, port = ?, mac_addr = ?'
                 ' WHERE id = ?',
-                (title, body, id)
+                (drone_name, description, ip_addr, port, mac_addr, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/update.html', post=post)
+    return render_template('blog/update.html', drone=drone)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_post(id)
+    get_drone(id)
     db = get_db()
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()

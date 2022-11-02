@@ -54,14 +54,15 @@ def register_group():
 
         if error is None:
             try:
+                print("Insert here?")
                 db.execute(
-                    "INSERT INTO groups (group_name) VALUES (?)," (group_name),
+                    "INSERT INTO groups (group_name) VALUES (?)", (group_name,)
                 )
                 db.commit()
             except db.IntegrityError:
                 error = f"Group {group_name} is already registered."
             else:
-                return redirect(url_for('groups'))
+                return redirect(url_for('blog.groups'))
 
         flash(error)
 
