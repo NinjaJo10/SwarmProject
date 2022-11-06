@@ -1,6 +1,7 @@
 import functools
 from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.exceptions import abort
 from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -152,3 +153,68 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+
+@bp.route('/<int:id>/add_drone_to_group', methods=('GET', 'POST'))
+def add_drone_to_group(id):
+    group_id = id
+    group = get_group(id)
+    user_id = session.get('user_id')
+    # flash(user_id)
+    drones_to_add = get_drones_not_in_group(user_id, group_id)
+
+    if request.method == "POST":
+        db = get_db()
+        for items in drones_to_add:
+            if request.form['add_button'] == "Add " + items['drone_name'] + " to Group":
+                temp_id = int(items['id'])
+                db.execute(
+                    'UPDATE drones SET group_id = ?'
+                    ' WHERE id = ?', (group_id, temp_id,)
+                )
+                break
+        db.commit()
+        return redirect(url_for('blog.groups'))
+
+    return render_template('auth/add_drone_to_group.html', drones_to_group=drones_to_add, group=group)
+
+
+def get_group(id, check_author=True):
+    group = get_db().execute(
+        'SELECT id, group_name'
+        ' FROM groups '
+        ' WHERE id = ?', (id,)
+    ).fetchone()
+
+    if group is None:
+        abort(404, f"Group id {id} doesn't exist.")
+
+    return group
+
+
+def get_drones(user_id, check_author=True):
+    drones = get_db().execute(
+        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
+        ' FROM drones p JOIN user u ON p.owner_id = u.id'
+        ' WHERE u.id = ?',
+        (user_id,)
+    ).fetchall()
+
+    if drones is None:
+        abort(404, f"Drone id {id} doesn't exist.")
+
+    return drones
+
+
+def get_drones_not_in_group(user_id, group_id, check_author=True):
+    drones = get_db().execute(
+        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
+        ' FROM drones p JOIN user u ON p.owner_id = u.id'
+        ' WHERE u.id = ? AND p.group_id != ?',
+        (user_id, group_id,)
+    ).fetchall()
+
+    if drones is None:
+        abort(404, f"Drone doesn't exist.")
+
+    return drones

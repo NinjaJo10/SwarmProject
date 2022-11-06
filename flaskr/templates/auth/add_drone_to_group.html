@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Add Drone to Group: {{ group['group_name'] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for drone in drones_to_group %}
+    <form method="post">
+      <article class="drone">
+        <header>
+          <div>
+            <h1>{{ drone['drone_name'] }}</h1>
+          </div>
+        </header>
+        <p class="description">Description: {{ drone['description'] }},
+          IP Address: {{ drone['ip_addr'] }}, Port: {{ drone['port'] }}, MAC Address: {{ drone['mac_addr'] }}</p>
+        {% if g.user['id'] == drone['owner_id'] %}
+          <input type="submit" name="add_button" value="Add {{ drone['drone_name'] }} to Group">
+        {% endif %}
+      </article>
+    </form>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

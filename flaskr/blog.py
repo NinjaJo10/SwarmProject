@@ -23,16 +23,19 @@ def index():
 @bp.route('/groups')
 def groups():
     db = get_db()
-    try:
-        groups = db.execute(
-            'SELECT id, group_name'
-            ' FROM groups'
-            ' ORDER BY id DESC'
-        ).fetchall()
-    except db.IntegrityError:
-        print("whoops")
-    finally:
-        return render_template('blog/groups.html', groups=groups)
+    drones_in_group_dict = {}
+
+    groups1 = get_group()
+    for group in groups1:
+        temp_id = group['id']
+        drones_in_group = get_drones_from_a_group(temp_id)
+        count_row = count_drones_a_group(temp_id)
+        for item in count_row:
+            if item[0] != 0:
+                drones_in_group_dict[temp_id] = item[0]
+
+    return render_template('blog/groups.html', groups=groups1, drones_in_group_dict=drones_in_group_dict,
+                           drones_in_group=drones_in_group)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -125,3 +128,41 @@ def delete(id):
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index'))
+
+
+def get_group():
+    group = get_db().execute(
+        'SELECT *'
+        ' FROM groups'
+    ).fetchall()
+
+    if group is None:
+        abort(404, f"No Groups doesn't exist.")
+
+    return group
+
+
+def get_drones_from_a_group(group_id):
+    drones = get_db().execute(
+        'SELECT *'
+        ' FROM drones'
+        ' WHERE group_id = ?', (group_id,)
+    ).fetchall()
+
+    if drones is None:
+        abort(404, f"No Drones in this group.")
+
+    return drones
+
+
+def count_drones_a_group(group_id):
+    drones = get_db().execute(
+        'SELECT COUNT (*)'
+        ' FROM drones'
+        ' WHERE group_id = ?', (group_id,)
+    ).fetchall()
+
+    if drones is None:
+        abort(404, f"No Drones in this group.")
+
+    return drones

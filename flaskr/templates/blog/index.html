@@ -19,7 +19,8 @@
           <a class="action" href="{{ url_for('blog.update', id=drone['id']) }}">Edit</a>
         {% endif %}
       </header>
-        <p class="description">Description: {{ drone['description'] }}, IP Address: {{ drone['ip_addr'] }}, Port: {{ drone['port'] }}, MAC Address: {{ drone['mac_addr'] }}</p>
+        <p class="description">Description: {{ drone['description'] }},
+          IP Address: {{ drone['ip_addr'] }}, Port: {{ drone['port'] }}, MAC Address: {{ drone['mac_addr'] }}</p>
     </article>
     {% if not loop.last %}
       <hr>

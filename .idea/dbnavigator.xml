@@ -29,20 +29,25 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="797f4465-5b09-4f4e-8d7e-af8019a80e33">
-      <console name="Drone Database" type="STANDARD" schema="main" session="Main" />
+      <console name="Drone Database" type="STANDARD" schema="main" session="Main"><![CDATA[select count(*) from main.drones where group_id = 4]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/groups" />
       <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/drones" />
+      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/user" />
+      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/groups" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="797f4465-5b09-4f4e-8d7e-af8019a80e33" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.drones" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.drones" active-filter-id="EMPTY_FILTER">
+      <filter id="447c0105-ec56-4ba0-b7f5-ebecd0ce25d7" name="4" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="=" value="4" active="true" />
+      </filter>
+    </filter-actions>
     <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.user" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.groups" active-filter-id="EMPTY_FILTER" />
   </component>
@@ -74,7 +79,9 @@
     <diagnostics-history />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
-    <recently-used-interfaces />
+    <recently-used-interfaces>
+      <mapping database-type="SQLITE" interface-id="DEFAULT" />
+    </recently-used-interfaces>
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
