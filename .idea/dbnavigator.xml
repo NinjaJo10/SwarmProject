@@ -35,8 +35,6 @@
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
       <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/drones" />
-      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/user" />
-      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/groups" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
@@ -131,7 +129,7 @@
           <session-management value="true" />
           <ddl-file-binding value="true" />
           <database-logging value="true" />
-          <connect-automatically value="true" />
+          <connect-automatically value="false" />
           <restore-workspace value="true" />
           <restore-workspace-deep value="false" />
           <environment-type value="default" />

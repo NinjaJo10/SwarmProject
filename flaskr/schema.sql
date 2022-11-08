@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS drones;
 DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS groups_and_drones;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
 
@@ -35,5 +36,13 @@ CREATE TABLE drones (
   FOREIGN KEY (owner_id) REFERENCES user (id),
   FOREIGN KEY (group_id) REFERENCES groups (id)
 );
+
+CREATE TABLE groups_and_drones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER NOT NULL,
+    drone_id INTEGER NOT NULL,
+    FOREIGN KEY (drone_id) REFERENCES drones (id),
+    FOREIGN KEY (group_id) REFERENCES groups (id)
+)
 
 

@@ -29,7 +29,8 @@ def register_drone():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO drones (drone_name, description, ip_addr, port, owner_id) VALUES (?, ?, ?, ?, ?)",
+                    "INSERT INTO drones (drone_name, description, ip_addr, port, owner_id, group_id) "
+                    "VALUES (?, ?, ?, ?, ?, 0)",
                     (drone_name, description, ip_addr, port, g.user['id']),
                 )
                 db.commit()
@@ -169,8 +170,9 @@ def add_drone_to_group(id):
             if request.form['add_button'] == "Add " + items['drone_name'] + " to Group":
                 temp_id = int(items['id'])
                 db.execute(
-                    'UPDATE drones SET group_id = ?'
-                    ' WHERE id = ?', (group_id, temp_id,)
+                    'INSERT INTO groups_and_drones (drone_id, group_id)'
+                    ' VALUES (?, ?)',
+                    (temp_id, group_id, )
                 )
                 break
         db.commit()
@@ -207,14 +209,14 @@ def get_drones(user_id, check_author=True):
 
 
 def get_drones_not_in_group(user_id, group_id, check_author=True):
-    drones = get_db().execute(
+    drones_not_in_group = get_db().execute(
         'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
         ' FROM drones p JOIN user u ON p.owner_id = u.id'
-        ' WHERE u.id = ? AND p.group_id != ?',
+        ' WHERE u.id = ? AND p.id NOT IN (SELECT drone_id FROM groups_and_drones WHERE group_id = ?)',
         (user_id, group_id,)
     ).fetchall()
 
-    if drones is None:
+    if drones_not_in_group is None:
         abort(404, f"Drone doesn't exist.")
 
-    return drones
+    return drones_not_in_group
