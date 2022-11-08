@@ -16,7 +16,7 @@
             {% if group['id'] in drones_in_group_dict.keys() %}
               <p>Drones in this group: </p>
               {% for drone in drones_in_group %}
-                <p> -   {{ drone['drone_name'] }}</p>
+                <p> - {{ drone['drone_name'] }}</p>
               {% endfor %}
             {% endif %}
             {% if g.user %}

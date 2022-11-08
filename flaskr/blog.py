@@ -24,6 +24,7 @@ def index():
 def groups():
     db = get_db()
     drones_in_group_dict = {}
+    drones_in_group = []
 
     groups1 = get_group()
     for group in groups1:
@@ -146,7 +147,7 @@ def get_drones_from_a_group(group_id):
     drones = get_db().execute(
         'SELECT *'
         ' FROM drones'
-        ' WHERE group_id = ?', (group_id,)
+        ' WHERE id in (SELECT drone_id FROM groups_and_drones WHERE groups_and_drones.group_id = ?)', (group_id,)
     ).fetchall()
 
     if drones is None:
@@ -159,7 +160,7 @@ def count_drones_a_group(group_id):
     drones = get_db().execute(
         'SELECT COUNT (*)'
         ' FROM drones'
-        ' WHERE group_id = ?', (group_id,)
+        ' WHERE id in (select drone_id from groups_and_drones where groups_and_drones.group_id = ?)', (group_id,)
     ).fetchall()
 
     if drones is None:
