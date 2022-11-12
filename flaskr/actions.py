@@ -15,3 +15,5 @@ def mainpage():
         ' ORDER BY p.id DESC'
     ).fetchall()
     return render_template('actions/mainpage.html', drones=drones)
+
+
