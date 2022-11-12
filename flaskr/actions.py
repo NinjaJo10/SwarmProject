@@ -8,12 +8,18 @@ bp = Blueprint('actions', __name__)
 
 @bp.route('/mainpage')
 def mainpage():
+
     db = get_db()
     drones = db.execute(
         'SELECT p.id, drone_name, description, ip_addr, port, u.username, owner_id'
         ' FROM drones p JOIN user u ON p.owner_id = u.id'
         ' ORDER BY p.id DESC'
     ).fetchall()
+
     return render_template('actions/mainpage.html', drones=drones)
 
 
+@bp.route('/mainpage')
+def connect_to_drones():
+    if request.method == "POST":
+        flash("Button Pushed Post")
