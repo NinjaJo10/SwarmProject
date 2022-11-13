@@ -9,9 +9,12 @@ from djitellopy import Tello, TelloSwarm
 #     "192.168.1.107"
 
 
-swarm = TelloSwarm.fromIps([])
+# swarm = TelloSwarm.fromIps([])
 
 
 def jo_swarm_connect(passed_addresses):
     ip_addresses = passed_addresses
-    print(ip_addresses)
+    print("You have passed these IP address:", ip_addresses)
+    swarm = TelloSwarm.fromIps(ip_addresses)
+
+    swarm.connect()

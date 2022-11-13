@@ -35,6 +35,8 @@
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
       <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/drones" />
+      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/groups_and_drones" />
+      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/groups" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
@@ -46,6 +48,7 @@
         <condition column="id" operator="=" value="4" active="true" />
       </filter>
     </filter-actions>
+    <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.groups_and_drones" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.user" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.groups" active-filter-id="EMPTY_FILTER" />
   </component>

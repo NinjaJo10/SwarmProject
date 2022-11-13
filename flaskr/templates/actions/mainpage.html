@@ -6,11 +6,22 @@
 
 {% block content %}
 <form method="post">
-      <header>
+    <header>
         <div>
-          <h1>Connect to Drones</h1>
-          <input type="submit" value="Do Action">
+            <h1>Select you Swarm</h1>
+            <label for="groups_dropdown"></label>
+            <select name="groups_dropdown" id="groups_dropdown">
+                {% for group in groups %}
+                    <option value="{{ group['group_name'] }}" name="selected_item">{{ group['group_name'] }}</option>
+                {% endfor %}
+            </select>
         </div>
-      </header>
+    </header>
+    <header>
+        <div>
+            <h1>Connect to Drones</h1>
+            <input type="submit" value="Do Action">
+        </div>
+    </header>
 </form>
 {% endblock %}
