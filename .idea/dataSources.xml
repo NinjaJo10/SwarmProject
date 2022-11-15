@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="flaskr" uuid="5ff4f7ba-f496-45dc-9efa-274feae51a71">
+    <data-source source="LOCAL" name="flaskr [2]" uuid="c967c8bb-8207-4e2c-9d92-98f54a5c5c96">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\2022\Sem2\Python Class\Week15\proj_jason\instance\flaskr.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\2022\Sem2\Python Class\Week15\SwarmProject\instance\flaskr.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.39.2/sqlite-jdbc-3.39.2.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

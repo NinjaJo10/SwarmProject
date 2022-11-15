@@ -26,15 +26,27 @@ def groups():
     drones_in_group_dict = {}
     drones_in_group = []
 
-    groups1 = get_group()
+    groups1 = get_groups()
     for group in groups1:
         temp_id = group['id']
+        tempName = group['group_name']
+        flash((temp_id, tempName))
         drones_in_group = get_drones_from_a_group(temp_id)
+        flash(drones_in_group[0][1])
         count_row = count_drones_a_group(temp_id)
         for item in count_row:
             if item[0] != 0:
-                drones_in_group_dict[temp_id] = item[0]
+                # the number of drones in this group
+                drones_in_group_dict[temp_id] = drones_in_group[0]
+                #     # print(drones_in_group_dict[0])
+                #     print(item)
+                flash(("From dict",drones_in_group_dict[temp_id]))
 
+        # flash(str(drones_in_group[0][1]))
+        # j = 0
+        # while j < drones_in_group_dict[temp_id]:
+        #     flash(("for j in groups:", drones_in_group[j][1]))
+        #     j += 1
     return render_template('blog/groups.html', groups=groups1, drones_in_group_dict=drones_in_group_dict,
                            drones_in_group=drones_in_group)
 
@@ -131,7 +143,7 @@ def delete(id):
     return redirect(url_for('blog.index'))
 
 
-def get_group():
+def get_groups():
     group = get_db().execute(
         'SELECT *'
         ' FROM groups'

@@ -90,7 +90,7 @@ class DroneServer(socketserver.BaseRequestHandler):
     drones = {
     }  # Holds instances of drones associated with their client address (so each clients gets its own drone even if simultaneous)
 
-    STATE_PORT = 9990
+    STATE_PORT = 8890
 
     def send_state_information(self, refresh_interval: int = 3) -> None:
         while True:
@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     print("WELCOME TO MOCK DRONE: \nI pretend to be a drone so you don't have to.")
     # 8999 is NOT the default Tello drone port. Update tello.py accordingly
-    HOST, PORT = "127.0.0.1", 8999
+    HOST, PORT = "127.0.0.1", 8889
     server = ThreadedUDPServer((HOST, PORT), DroneServer)
     with server:
         ip, port = server.server_address

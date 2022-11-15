@@ -18,3 +18,10 @@ def jo_swarm_connect(passed_addresses):
     swarm = TelloSwarm.fromIps(ip_addresses)
 
     swarm.connect()
+    swarm.takeoff()
+
+    swarm.move_left(100)
+    swarm.rotate_clockwise(90)
+    swarm.move_forward(100)
+
+    swarm.land()
