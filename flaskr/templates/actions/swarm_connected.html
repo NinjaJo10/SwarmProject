@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Actions for {{ swarm }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <header>
+        <div>
+            <h1>Basic actions you can do are:</h1>
+            <label for="actions_dropdown"></label>
+            <select name="actions_dropdown" id="actions_dropdown">
+                {% for action in basic_actions_list %}
+                    <option value="{{ action }}" name="selected_item">{{ action }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </header>
+    <header>
+        <div>
+            <h1>Action Routines you can do are:</h1>
+            <label for="routines_dropdown"></label>
+            <select name="routines_dropdown" id="routines_dropdown">
+                {% for routine in routines_list %}
+                    <option value="{{ routine }}" name="selected_item">{{ routine }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </header>
+    <div>
+        <h3>Do Selected</h3>
+        <input type="submit" value="Do Selected">
+    </div>
+</form>
+{% endblock %}

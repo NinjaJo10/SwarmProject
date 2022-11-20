@@ -29,13 +29,15 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="797f4465-5b09-4f4e-8d7e-af8019a80e33">
-      <console name="Drone Database" type="STANDARD" schema="main" session="Main"><![CDATA[select count(*) from main.drones where group_id = 4]]></console>
+      <console name="Drone Database" type="STANDARD" schema="main" session="Main"><![CDATA[SELECT *
+FROM drones
+WHERE id in (SELECT drone_id
+FROM groups_and_drones
+WHERE group_id = 2)]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" object-ref="schemas/main/tables/drones" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="797f4465-5b09-4f4e-8d7e-af8019a80e33" />
@@ -46,6 +48,7 @@
         <condition column="id" operator="=" value="4" active="true" />
       </filter>
     </filter-actions>
+    <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.groups_and_drones" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.user" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="797f4465-5b09-4f4e-8d7e-af8019a80e33" dataset="main.groups" active-filter-id="EMPTY_FILTER" />
   </component>
@@ -98,8 +101,8 @@
           <port value="" />
           <database value="" />
           <files>
-            <file path="F:\2022\Sem2\Python Class\Week15\proj_jason\instance\flaskr.sqlite" schema="main" />
-            <file path="F:\2022\Sem2\Python Class\Week15\proj_jason\flaskr\schema.sql" schema="schema" />
+            <file path="C:\Users\Jason\PycharmProjects\SwarmProject\instance\flaskr.sqlite" schema="main" />
+            <file path="C:\Users\Jason\PycharmProjects\SwarmProject\flaskr\schema.sql" schema="flaskr" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -129,7 +132,7 @@
           <session-management value="true" />
           <ddl-file-binding value="true" />
           <database-logging value="true" />
-          <connect-automatically value="false" />
+          <connect-automatically value="true" />
           <restore-workspace value="true" />
           <restore-workspace-deep value="false" />
           <environment-type value="default" />
