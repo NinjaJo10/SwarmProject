@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS groups_and_drones;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS actions_to_do;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,6 +44,11 @@ CREATE TABLE groups_and_drones (
     drone_id INTEGER NOT NULL,
     FOREIGN KEY (drone_id) REFERENCES drones (id),
     FOREIGN KEY (group_id) REFERENCES groups (id)
-)
+);
+
+CREATE TABLE actions_to_do (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  action_name TEXT UNIQUE NOT NULL
+);
 
 
