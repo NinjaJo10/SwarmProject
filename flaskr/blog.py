@@ -24,6 +24,7 @@ def index():
 def groups():
     db = get_db()
     drones_in_group_dict = {}
+    amt_drones_in_group_dict = {}
     drones_in_group = []
 
     groups1 = get_group()
@@ -33,10 +34,10 @@ def groups():
         count_row = count_drones_a_group(temp_id)
         for item in count_row:
             if item[0] != 0:
-                drones_in_group_dict[temp_id] = item[0]
-
-    return render_template('blog/groups.html', groups=groups1, drones_in_group_dict=drones_in_group_dict,
-                           drones_in_group=drones_in_group)
+                amt_drones_in_group_dict[temp_id] = item[0]
+        drones_in_group_dict[temp_id] = drones_in_group
+    return render_template('blog/groups.html', groups=groups1, amt_drones_in_group_dict=amt_drones_in_group_dict,
+                           drones_in_group_dict=drones_in_group_dict)
 
 
 @bp.route('/create', methods=('GET', 'POST'))

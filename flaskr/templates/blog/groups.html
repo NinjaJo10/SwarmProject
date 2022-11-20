@@ -13,11 +13,17 @@
       <header>
         <div>
           <h1>{{ group['group_name'] }}</h1>
-            {% if group['id'] in drones_in_group_dict.keys() %}
+            {% if group['id'] in amt_drones_in_group_dict.keys() %}
               <p>Drones in this group: </p>
-              {% for drone in drones_in_group %}
-                <p> - {{ drone['drone_name'] }}</p>
+              {% for group_drone in drones_in_group_dict %}
+                {% if group_drone == group['id'] %}
+                    {% for drone in drones_in_group_dict[group['id']] %}
+                      <p> - {{ drone['drone_name'] }}</p>
+                    {% endfor %}
+                {% endif %}
               {% endfor %}
+            {% else %}
+              <p> No Drones in this Group</p>
             {% endif %}
             {% if g.user %}
                 <a class="action" href="{{ url_for('auth.add_drone_to_group', id=group['id']) }}">Add Drone to Group</a>
