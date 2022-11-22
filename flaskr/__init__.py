@@ -2,6 +2,8 @@ import os
 
 from flask import Flask
 
+# Attempt from 22/11/2022
+# Works, connects and flies. Saving to have a record as I will be refactoring a lot of code
 
 def create_app(test_config=None):
     # create and configure the app
