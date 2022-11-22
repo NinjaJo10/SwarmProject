@@ -7,70 +7,6 @@ from flaskr.db import get_db
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-@bp.route('/register_drone', methods=('GET', 'POST'))
-def register_drone():
-    if request.method == 'POST':
-        drone_name = request.form['drone_name']
-        description = request.form['description']
-        ip_addr = request.form['ip_addr']
-        port = request.form['port']
-        db = get_db()
-        error = None
-
-        if not drone_name:
-            error = 'Drone Name is required.'
-        elif not description:
-            error = 'Description is required.'
-        elif not ip_addr:
-            error = 'IP Address is required.'
-        elif not port:
-            error = 'Port is required.'
-
-        if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO drones (drone_name, description, ip_addr, port, owner_id, group_id) "
-                    "VALUES (?, ?, ?, ?, ?, 0)",
-                    (drone_name, description, ip_addr, port, g.user['id']),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"Drone {drone_name} is already registered."
-            else:
-                return redirect(url_for('index'))
-
-        flash(error)
-
-    return render_template('auth/register_drone.html')
-
-
-@bp.route('/register_group', methods=('GET', 'POST'))
-def register_group():
-    if request.method == 'POST':
-        group_name = request.form['group_name']
-        db = get_db()
-        error = None
-
-        if not group_name:
-            error = 'Group Name is required.'
-
-        if error is None:
-            try:
-                print("Insert here?")
-                db.execute(
-                    "INSERT INTO groups (group_name) VALUES (?)", (group_name,)
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"Group {group_name} is already registered."
-            else:
-                return redirect(url_for('blog.groups'))
-
-        flash(error)
-
-    return render_template('auth/register_group.html')
-
-
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -156,42 +92,7 @@ def login_required(view):
     return wrapped_view
 
 
-@bp.route('/<int:id>/add_drone_to_group', methods=('GET', 'POST'))
-def add_drone_to_group(id):
-    group_id = id
-    group = get_group(id)
-    user_id = session.get('user_id')
-    # flash(user_id)
-    drones_to_add = get_drones_not_in_group(user_id, group_id)
 
-    if request.method == "POST":
-        db = get_db()
-        for items in drones_to_add:
-            if request.form['add_button'] == "Add " + items['drone_name'] + " to Group":
-                temp_id = int(items['id'])
-                db.execute(
-                    'INSERT INTO groups_and_drones (drone_id, group_id)'
-                    ' VALUES (?, ?)',
-                    (temp_id, group_id, )
-                )
-                break
-        db.commit()
-        return redirect(url_for('blog.groups'))
-
-    return render_template('auth/add_drone_to_group.html', drones_to_group=drones_to_add, group=group)
-
-
-def get_group(id, check_author=True):
-    group = get_db().execute(
-        'SELECT id, group_name'
-        ' FROM groups '
-        ' WHERE id = ?', (id,)
-    ).fetchone()
-
-    if group is None:
-        abort(404, f"Group id {id} doesn't exist.")
-
-    return group
 
 
 def get_drones(user_id, check_author=True):
@@ -207,16 +108,3 @@ def get_drones(user_id, check_author=True):
 
     return drones
 
-
-def get_drones_not_in_group(user_id, group_id, check_author=True):
-    drones_not_in_group = get_db().execute(
-        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
-        ' FROM drones p JOIN user u ON p.owner_id = u.id'
-        ' WHERE u.id = ? AND p.id NOT IN (SELECT drone_id FROM groups_and_drones WHERE group_id = ?)',
-        (user_id, group_id,)
-    ).fetchall()
-
-    if drones_not_in_group is None:
-        abort(404, f"Drone doesn't exist.")
-
-    return drones_not_in_group

@@ -24,20 +24,18 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, Jason!'
-
     from . import db
     db.init_app(app)
 
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import blog
-    app.register_blueprint(blog.bp)
-    app.add_url_rule('/', endpoint='index')
+    from . import drones
+    app.register_blueprint(drones.bp)
+    app.add_url_rule('/', endpoint='drones_display')
+
+    from . import swarms
+    app.register_blueprint(swarms.bp)
 
     from . import actions
     app.register_blueprint(actions.bp)

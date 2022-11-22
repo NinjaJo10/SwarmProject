@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Your Drones{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('auth.register_drone') }}">Add Drone</a>
+    <a class="action" href="{{ url_for('drones.register_drone') }}">Add Drone</a>
   {% endif %}
 {% endblock %}
 
@@ -16,7 +16,7 @@
           <div class="about">owned by {{ drone['username'] }}</div>
         </div>
         {% if g.user['id'] == drone['owner_id'] %}
-          <a class="action" href="{{ url_for('blog.update', id=drone['id']) }}">Edit</a>
+          <a class="action" href="{{ url_for('drones.update_info', id=drone['id']) }}">Edit</a>
         {% endif %}
       </header>
         <p class="description">Description: {{ drone['description'] }},

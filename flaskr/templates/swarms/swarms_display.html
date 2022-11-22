@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Drone Groups{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('auth.register_group') }}">Add Group</a>
+    <a class="action" href="{{ url_for('swarms.register_swarm') }}">Add Group</a>
   {% endif %}
 {% endblock %}
 
@@ -26,7 +26,7 @@
               <p> No Drones in this Group</p>
             {% endif %}
             {% if g.user %}
-                <a class="action" href="{{ url_for('auth.add_drone_to_group', id=group['id']) }}">Add Drone to Group</a>
+                <a class="action" href="{{ url_for('swarms.add_drone_to_swarm', id=group['id']) }}">Add Drone to Group</a>
             {% endif %}
         </div>
       </header>
