@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Add Drone to Group: {{ group['group_name'] }}{% endblock %}</h1>
+  <h1>{% block title %}Add Drone to Swarm: {{ swarm['group_name'] }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  {% for drone in drones_to_group %}
+  {% for drone in drones_to_swarm %}
     <form method="post">
       <article class="drone">
         <header>
@@ -14,9 +14,9 @@
           </div>
         </header>
         <p class="description">Description: {{ drone['description'] }},
-          IP Address: {{ drone['ip_addr'] }}, Port: {{ drone['port'] }}, MAC Address: {{ drone['mac_addr'] }}</p>
+          IP Address: {{ drone['ip_addr'] }}, Port: {{ drone['port'] }}</p>
         {% if g.user['id'] == drone['owner_id'] %}
-          <input type="submit" name="add_button" value="Add {{ drone['drone_name'] }} to Group">
+          <input type="submit" name="add_button" value="Add {{ drone['drone_name'] }} to Swarm">
         {% endif %}
       </article>
     </form>

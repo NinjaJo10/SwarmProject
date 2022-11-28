@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Drone Groups{% endblock %}</h1>
+  <h1>{% block title %}Drone Swarms{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('swarms.register_swarm') }}">Add Group</a>
+    <a class="action" href="{{ url_for('swarms.register_swarm') }}">Add Swarm</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% for group in groups %}
-    <article class="group">
+  {% for swarm in swarms %}
+    <article class="swarm">
       <header>
         <div>
-          <h1>{{ group['group_name'] }}</h1>
-            {% if group['id'] in amt_drones_in_group_dict.keys() %}
-              <p>Drones in this group: </p>
+          <h1>{{ swarm['group_name'] }}</h1>
+            {% if swarm['id'] in amt_drones_in_group_dict.keys() %}
+              <p>Drones in this Swarm: </p>
               {% for group_drone in drones_in_group_dict %}
-                {% if group_drone == group['id'] %}
-                    {% for drone in drones_in_group_dict[group['id']] %}
+                {% if group_drone == swarm['id'] %}
+                    {% for drone in drones_in_group_dict[swarm['id']] %}
                       <p> - {{ drone['drone_name'] }}</p>
                     {% endfor %}
                 {% endif %}
               {% endfor %}
             {% else %}
-              <p> No Drones in this Group</p>
+              <p> No Drones in this Swarm</p>
             {% endif %}
             {% if g.user %}
-                <a class="action" href="{{ url_for('swarms.add_drone_to_swarm', id=group['id']) }}">Add Drone to Group</a>
+                <a class="action" href="{{ url_for('swarms.add_drone_to_swarm', id=swarm['id']) }}">Add Drone to Swarm</a>
             {% endif %}
         </div>
       </header>

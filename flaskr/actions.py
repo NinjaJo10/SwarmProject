@@ -8,8 +8,8 @@ bp = Blueprint('actions', __name__)
 _selected_swarm = ""
 
 
-@bp.route('/mainpage', methods=('GET', 'POST'))
-def mainpage():
+@bp.route('/actions_connect_to_swarm', methods=('GET', 'POST'))
+def actions_connect_to_swarm():
     if request.method == "POST":
         selected_swarm = request.form.get('groups_dropdown')
         # selected_item = request.form.get('selected_group')
@@ -28,7 +28,7 @@ def mainpage():
         ' ORDER BY p.id DESC'
     ).fetchall()
 
-    return render_template('actions/mainpage.html', groups=groups)
+    return render_template('actions/actions_connect_to_swarm.html', groups=groups)
 
 
 @bp.route('/swarm_connected/<swarm>', methods=('GET', 'POST'))

@@ -71,7 +71,7 @@ def update_info(id):
                 (drone_name, description, ip_addr, port, mac_addr, id)
             )
             db.commit()
-            return redirect(url_for('drones.index'))
+            return redirect(url_for('drones.drones_display'))
 
     return render_template('drones/update_info.html', drone=drone)
 
@@ -116,7 +116,7 @@ def register_drone():
             except db.IntegrityError:
                 error = f"Drone {drone_name} is already registered."
             else:
-                return redirect(url_for('index'))
+                return redirect(url_for('drones_display'))
 
         flash(error)
 

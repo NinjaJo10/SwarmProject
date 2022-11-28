@@ -8,7 +8,7 @@
         <li><span>{{ g.user['username'] }}</span>
         <li><a href="{{ url_for('drones.drones_display') }}">Drones</a>
         <li><a href="{{ url_for('swarms.swarms') }}">Swarms</a>
-        <li><a href="{{ url_for('actions.mainpage') }}">Actions</a>
+        <li><a href="{{ url_for('actions.actions_connect_to_swarm') }}">Actions</a>
         <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
     {% else %}
       <li><a href="{{ url_for('auth.register') }}">Register User</a>
