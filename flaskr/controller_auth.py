@@ -4,6 +4,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import abort
 from flaskr.db import get_db
 
+from flaskr.models.model_user_auth import Model_auth
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -21,19 +23,14 @@ def register():
             error = 'Password is required.'
 
         if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"User {username} is already registered."
-            else:
+            hashed_password = generate_password_hash(password)
+            result = Model_auth.insert_user(db, username, hashed_password)
+            if result is "":
                 return redirect(url_for("auth.login"))
+            else:
+                flash(result)
 
         flash(error)
-
     return render_template('auth/register.html')
 
 
@@ -44,9 +41,7 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+        user = Model_auth.get_user_with_name(db, username)
 
         if user is None:
             error = 'Incorrect username.'
@@ -70,15 +65,14 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        db = get_db()
+        g.user = Model_auth.get_user_with_id(db, user_id)
 
 
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('drones.drones_display'))
 
 
 def login_required(view):
@@ -91,20 +85,4 @@ def login_required(view):
 
     return wrapped_view
 
-
-
-
-
-def get_drones(user_id, check_author=True):
-    drones = get_db().execute(
-        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
-        ' FROM drones p JOIN user u ON p.owner_id = u.id'
-        ' WHERE u.id = ?',
-        (user_id,)
-    ).fetchall()
-
-    if drones is None:
-        abort(404, f"Drone id {id} doesn't exist.")
-
-    return drones
 

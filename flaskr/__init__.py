@@ -27,17 +27,17 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    from . import auth
+    from . import controller_auth
     app.register_blueprint(auth.bp)
 
-    from . import drones
-    app.register_blueprint(drones.bp)
+    from . import controller_drones
+    app.register_blueprint(controller_drones.bp)
     app.add_url_rule('/', endpoint='drones_display')
 
-    from . import swarms
-    app.register_blueprint(swarms.bp)
+    from . import controller_swarms
+    app.register_blueprint(controller_swarms.bp)
 
-    from . import actions
-    app.register_blueprint(actions.bp)
+    from . import controller_actions
+    app.register_blueprint(controller_actions.bp)
 
     return app

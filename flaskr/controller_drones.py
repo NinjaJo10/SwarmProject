@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
+from flaskr.controller_auth import login_required
 from flaskr.db import get_db
 
 from flaskr.models.model_drones import Model_drone
