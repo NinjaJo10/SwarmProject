@@ -26,7 +26,7 @@ def actions_connect_to_swarm():
 
 @bp.route('/swarm_connected/<swarm>', methods=('GET', 'POST'))
 def swarm_connected(swarm):
-    basic_actions_list = ['', 'Takeoff', 'Move Left', 'Rotate', 'Move Forward', 'Land']
+    basic_actions_list = ['', 'Takeoff', 'Land']
     routines_list = {
         '': "",
         'Move Left, Rotate and Forwards': "Drone will takeoff, Move to the left, rotate Left, move forwards and then "
@@ -54,12 +54,6 @@ def find_action(action, swarm):
         case "Takeoff":
             JO_dronesTello.jo_swarm_takeoff(get_drones(swarm))
             print("doing the takeoff stuff")
-        case "Move Left":
-            print("doing move left")
-        case "Rotate":
-            print("doing rotate")
-        case "Move Forward":
-            print("doing move forward")
         case "Land":
             JO_dronesTello.jo_swarm_land(get_drones(swarm))
             print("landing now")
