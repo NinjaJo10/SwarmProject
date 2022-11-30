@@ -3,8 +3,10 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
+from flaskr.controller_auth import login_required
 from flaskr.db import get_db
+
+from flaskr.models.model_drones import Model_drone
 
 bp = Blueprint('drones', __name__)
 
@@ -12,21 +14,13 @@ bp = Blueprint('drones', __name__)
 @bp.route('/')
 def drones_display():
     db = get_db()
-    drones = db.execute(
-        'SELECT p.id, drone_name, description, ip_addr, port, u.username, owner_id'
-        ' FROM drones p JOIN user u ON p.owner_id = u.id'
-        ' ORDER BY p.id DESC'
-    ).fetchall()
+    drones = Model_drone.drones_display(db)
     return render_template('drones/drones_display.html', drones=drones)
 
 
 def get_drone(id, check_author=True):
-    drone = get_db().execute(
-        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
-        ' FROM drones p JOIN user u ON p.owner_id = u.id'
-        ' WHERE p.id = ?',
-        (id,)
-    ).fetchone()
+    db = get_db()
+    drone = Model_drone.get_drone(db, id)
 
     if drone is None:
         abort(404, f"Drone id {id} doesn't exist.")
@@ -65,12 +59,7 @@ def update_info(id):
             flash(error)
         else:
             db = get_db()
-            db.execute(
-                'UPDATE drones SET drone_name = ?, description = ?, ip_addr = ?, port = ?, mac_addr = ?'
-                ' WHERE id = ?',
-                (drone_name, description, ip_addr, port, mac_addr, id)
-            )
-            db.commit()
+            Model_drone.update_drone_info(db, drone_name, description, ip_addr, port, mac_addr, id)
             return redirect(url_for('drones.drones_display'))
 
     return render_template('drones/update_info.html', drone=drone)
@@ -81,9 +70,8 @@ def update_info(id):
 def delete(id):
     get_drone(id)
     db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
-    db.commit()
-    return redirect(url_for('drones.index'))
+    Model_drone.delete_drone(db, id)
+    return redirect(url_for('drones.drones_display'))
 
 
 @bp.route('/register_drone', methods=('GET', 'POST'))
@@ -106,18 +94,13 @@ def register_drone():
             error = 'Port is required.'
 
         if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO drones (drone_name, description, ip_addr, port, owner_id, group_id) "
-                    "VALUES (?, ?, ?, ?, ?, 0)",
-                    (drone_name, description, ip_addr, port, g.user['id']),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"Drone {drone_name} is already registered."
-            else:
+            db = get_db()
+            result = Model_drone.insert_drone(db, drone_name, description, ip_addr, port, g.user['id'])
+            if result is "":
                 return redirect(url_for('drones_display'))
-
-        flash(error)
+            else:
+                flash(result)
+        else:
+            flash(error)
 
     return render_template('drones/register_drone.html')

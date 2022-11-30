@@ -3,8 +3,9 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
+from flaskr.controller_auth import login_required
 from flaskr.db import get_db
+from flaskr.models.model_swarms import Model_swarm
 
 bp = Blueprint('swarms', __name__)
 
@@ -30,10 +31,8 @@ def swarms():
 
 
 def get_all_swarms():
-    swarm = get_db().execute(
-        'SELECT *'
-        ' FROM groups'
-    ).fetchall()
+    db = get_db()
+    swarm = Model_swarm.get_all_swarms(db)
 
     if swarm is None:
         abort(404, f"No Swarms doesn't exist.")
@@ -42,11 +41,8 @@ def get_all_swarms():
 
 
 def get_drones_from_a_swarm(swarm_id):
-    drones = get_db().execute(
-        'SELECT *'
-        ' FROM drones'
-        ' WHERE id in (SELECT drone_id FROM groups_and_drones WHERE groups_and_drones.group_id = ?)', (swarm_id,)
-    ).fetchall()
+    db = get_db()
+    drones = Model_swarm.get_drones_from_a_swarm(db, swarm_id)
 
     if drones is None:
         abort(404, f"No Drones in this swarm.")
@@ -55,11 +51,8 @@ def get_drones_from_a_swarm(swarm_id):
 
 
 def count_drones_a_group(swarm_id):
-    drones = get_db().execute(
-        'SELECT COUNT (*)'
-        ' FROM drones'
-        ' WHERE id in (select drone_id from groups_and_drones where groups_and_drones.group_id = ?)', (swarm_id,)
-    ).fetchall()
+    db = get_db()
+    drones = Model_swarm.count_of_drones_a_group(db, swarm_id)
 
     if drones is None:
         abort(404, f"No Drones in this Swarm.")
@@ -71,25 +64,21 @@ def count_drones_a_group(swarm_id):
 def register_swarm():
     if request.method == 'POST':
         swarm_name = request.form['swarm_name']
-        db = get_db()
         error = None
 
         if not swarm_name:
             error = 'Swarm Name is required.'
 
         if error is None:
-            try:
-                print("Insert here?")
-                db.execute(
-                    "INSERT INTO groups (group_name) VALUES (?)", (swarm_name,)
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"Swarm {swarm_name} is already registered."
-            else:
+            db = get_db()
+            result = Model_swarm.insert_swarm(db, swarm_name)
+            print("out of model", result)
+            if result is "":
                 return redirect(url_for('swarms.swarms'))
-
-        flash(error)
+            else:
+                flash(result)
+        else:
+            flash(error)
 
     return render_template('swarms/register_swarm.html')
 
@@ -99,7 +88,6 @@ def add_drone_to_swarm(id):
     swarm_id = id
     this_swarm = get_swarm(id)
     user_id = session.get('user_id')
-    # flash(user_id)
     drones_to_add = get_drones_not_in_swarm(user_id, swarm_id)
 
     if request.method == "POST":
@@ -107,11 +95,7 @@ def add_drone_to_swarm(id):
         for items in drones_to_add:
             if request.form['add_button'] == "Add " + items['drone_name'] + " to Swarm":
                 temp_id = int(items['id'])
-                db.execute(
-                    'INSERT INTO groups_and_drones (drone_id, group_id)'
-                    ' VALUES (?, ?)',
-                    (temp_id, swarm_id, )
-                )
+                Model_swarm.add_drone_to_swarm(db, temp_id, swarm_id)
                 break
         db.commit()
         return redirect(url_for('swarms.swarms'))
@@ -120,12 +104,8 @@ def add_drone_to_swarm(id):
 
 
 def get_drones_not_in_swarm(user_id, swarm_id, check_author=True):
-    drones_not_in_swarm = get_db().execute(
-        'SELECT p.id, drone_name, description, ip_addr, port, mac_addr, owner_id'
-        ' FROM drones p JOIN user u ON p.owner_id = u.id'
-        ' WHERE u.id = ? AND p.id NOT IN (SELECT drone_id FROM groups_and_drones WHERE group_id = ?)',
-        (user_id, swarm_id,)
-    ).fetchall()
+    db = get_db()
+    drones_not_in_swarm = Model_swarm.get_drones_not_in_swarm(db, user_id, swarm_id)
 
     if drones_not_in_swarm is None:
         abort(404, f"Drone doesn't exist.")
@@ -134,11 +114,8 @@ def get_drones_not_in_swarm(user_id, swarm_id, check_author=True):
 
 
 def get_swarm(id, check_author=True):
-    swarm = get_db().execute(
-        'SELECT id, group_name'
-        ' FROM groups '
-        ' WHERE id = ?', (id,)
-    ).fetchone()
+    db = get_db()
+    swarm = Model_swarm.get_swarm(db, id)
 
     if swarm is None:
         abort(404, f"Swarm id {id} doesn't exist.")
